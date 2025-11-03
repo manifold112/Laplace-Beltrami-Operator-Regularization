@@ -11,6 +11,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 
 from lbor_islr.losses import LBORLoss
+from lbor_islr.models import build_model_from_config
 
 
 def parse_args() -> argparse.Namespace:
@@ -100,24 +101,24 @@ def accuracy(
     return tuple(res)
 
 
-def build_model_from_config(cfg: Dict[str, Any], num_classes: int) -> nn.Module:
-   
-    raise NotImplementedError(
-        "Please implement `build_model_from_config` to create your backbone model."
-    )
-
-
 def build_dataloaders_from_config(
     cfg: Dict[str, Any]
 ) -> Tuple[DataLoader, DataLoader]:
-    
+    """
+    Placeholder dataloader builder.
+
+    TODO: 在下一步中我们会实现真正的 WLASL / NMFs-CSL Dataset。
+    现在先保留这个占位，避免脚本报错。
+    """
     raise NotImplementedError(
         "Please implement `build_dataloaders_from_config` to create your DataLoaders."
     )
 
 
 def get_inputs_and_labels_from_batch(batch):
-    
+    """
+    Helper: 支持 (inputs, labels) 和 dict 两种 batch 格式。
+    """
     if isinstance(batch, (list, tuple)) and len(batch) == 2:
         inputs, labels = batch
     elif isinstance(batch, dict):
@@ -167,7 +168,6 @@ def train_one_epoch(
         inputs = inputs.to(device, non_blocking=True)
         labels = labels.to(device, non_blocking=True)
 
-        
         logits, features = model(inputs)
 
         total_loss, loss_dict = criterion(logits, features, labels)
@@ -281,10 +281,9 @@ def main() -> None:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"[Info] Using device: {device}")
 
-
+    # Build dataloaders (下一步我们会实现真正的数据加载函数)
     train_loader, val_loader = build_dataloaders_from_config(cfg)
 
-    # Dataset / model related config
     dataset_cfg = cfg.get("dataset", {})
     model_cfg = cfg.get("model", {})
     loss_cfg = cfg.get("loss", {})
@@ -293,7 +292,7 @@ def main() -> None:
     num_classes = int(dataset_cfg.get("num_classes"))
     feat_dim = int(model_cfg.get("feat_dim"))
 
-   
+    # Build model via model builder
     model = build_model_from_config(model_cfg, num_classes=num_classes)
     model.to(device)
 
