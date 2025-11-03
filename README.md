@@ -32,9 +32,8 @@ Laplace-Beltrami-Operator-Regularization/
 ├── README.md
 ├── LICENSE
 ├── CITATION.cff
-├── FG2026_LBOR.pdf             # (optional) paper or preprint
 ├── requirements.txt            # or environment.yml
-├── setup.py / pyproject.toml   # (optional) install as a package
+├── setup.py 
 ├── .gitignore
 
 ├── configs/                    # experiment configurations
