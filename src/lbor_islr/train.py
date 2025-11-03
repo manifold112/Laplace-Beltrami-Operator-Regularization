@@ -12,6 +12,7 @@ from torch.utils.data import DataLoader
 
 from lbor_islr.losses import LBORLoss
 from lbor_islr.models import build_model_from_config
+from lbor_islr.datasets import build_dataloaders_from_config
 
 
 def parse_args() -> argparse.Namespace:
@@ -99,20 +100,6 @@ def accuracy(
         correct_k = correct[:k].reshape(-1).float().sum(0)
         res.append(correct_k.mul_(100.0 / batch_size))
     return tuple(res)
-
-
-def build_dataloaders_from_config(
-    cfg: Dict[str, Any]
-) -> Tuple[DataLoader, DataLoader]:
-    """
-    Placeholder dataloader builder.
-
-    TODO: 在下一步中我们会实现真正的 WLASL / NMFs-CSL Dataset。
-    现在先保留这个占位，避免脚本报错。
-    """
-    raise NotImplementedError(
-        "Please implement `build_dataloaders_from_config` to create your DataLoaders."
-    )
 
 
 def get_inputs_and_labels_from_batch(batch):
@@ -281,7 +268,7 @@ def main() -> None:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"[Info] Using device: {device}")
 
-    # Build dataloaders (下一步我们会实现真正的数据加载函数)
+    # Build dataloaders
     train_loader, val_loader = build_dataloaders_from_config(cfg)
 
     dataset_cfg = cfg.get("dataset", {})
