@@ -1,0 +1,36 @@
+dataset:
+  name: "wlasl"
+  root: "data/wlasl"
+  train_list: "data/wlasl/wlasl_train_list.txt"
+  val_list: "data/wlasl/wlasl_val_list.txt"
+  num_classes: 100        
+  num_frames: 52          
+
+model:
+  name: "hma"
+  input_dim: 3900
+  feat_dim: 512
+  hidden_dim: 1024
+
+loss:
+  lambda_lap: 1.0
+  mu_margin: 0.1
+  margin_M: 1.0
+  tau: 1.0
+  use_knn: true
+  knn_k: 5
+  center_momentum: 0.1
+
+train:
+  epochs: 50
+  base_lr: 0.0005
+  weight_decay: 0.0001
+  optimizer: "adamw"
+  scheduler: "cosine"
+  batch_size: 32
+  num_workers: 4
+  print_freq: 50
+
+misc:
+  seed: 42
+  output_dir: "outputs/wlasl_hma_lbor"
